@@ -18,9 +18,9 @@ namespace CatsTaskProject.Managers
         {
         }
 
-        public async Task<string> GetBreedImages(string breed, int quantity)
+        public async Task<string> GetImageById(string imageId)
         {
-            string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breed}&limit={quantity}";
+            string url = $"https://api.thecatapi.com/v1/images/{imageId}";
             return await httpClient.GetStringAsync(url);
         }
 
@@ -33,6 +33,12 @@ namespace CatsTaskProject.Managers
         public async Task<string> GetBreedById(string id)
         {
             string url = $"http://api.thecatapi.com/v1/breeds/{id}";
+            return await httpClient.GetStringAsync(url);
+        }
+
+        public async Task<string> GetBreedImages(string breed, int quantity)
+        {
+            string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breed}&limit={quantity}";
             return await httpClient.GetStringAsync(url);
         }
     }

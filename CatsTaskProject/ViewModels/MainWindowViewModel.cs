@@ -1,14 +1,7 @@
 ﻿using CatsTaskProject.Managers;
 using CatsTaskProject.Models;
-using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive;
-using System.Text;
+using DynamicData.Binding;
 using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
 using System.Windows.Input;
 
 namespace CatsTaskProject.ViewModels
@@ -19,7 +12,7 @@ namespace CatsTaskProject.ViewModels
 
         public MainWindowViewModel()
         {
-            GetCatBreedsCommand = new DelegateCommand(GetImageById);
+            GetCatBreedsCommand = new DelegateCommand(GetCatBreeds);
         }
 
         public ICommand GetCatBreedsCommand { get; }
@@ -31,16 +24,34 @@ namespace CatsTaskProject.ViewModels
 
         private async void GetCatBreeds()
         {
-            var apiManager = CatAPIManager.Instance;
-            var result = await apiManager.GetBreeds(20, _page++);
+            CatAPIManager apiManager = CatAPIManager.Instance;
+            string jsonResult = await apiManager.GetBreeds(20, _page++);
+
+            ICollection<Breed> breeds = JsonSerializer.Deserialize<ICollection<Breed>>(jsonResult);
+            LoadBreedsImages(breeds);
         }
 
-        private async void GetImageById()
+        private async void LoadBreedsImages(ICollection<Breed> breeds)
         {
-            var apiManager = CatAPIManager.Instance;
-            var result = await apiManager.GetImageById("0XYvRd7oD");
+            ImageManager imageManager = new();
+            foreach (Breed breed in breeds)
+            {
+                CatAPIManager apiManager = CatAPIManager.Instance;
+                if (breed.MainImageId is null)
+                {
+                    string jsonImage = await apiManager.GetBreedImages(breed.Id, 1);
 
-            CatImage image = JsonSerializer.Deserialize<CatImage>(result);
+                    List<CatImage> images = JsonSerializer.Deserialize<List<CatImage>>(jsonImage);
+                    breed.MainImageId = images[0].Id;
+                    await imageManager.LoadImage(images[0].Url);
+                }
+                else if (!imageManager.ImageAlreadyLoadedById(breed.MainImageId))
+                {
+                    var jsonImage = await apiManager.GetImageById(breed.MainImageId);
+
+                    await imageManager.LoadImage(JsonSerializer.Deserialize<CatImage>(jsonImage).Url);
+                }
+            }
         }
     }
 }

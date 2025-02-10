@@ -1,4 +1,4 @@
-﻿<views:BaseWindow x:Class="CatsTaskProject.Views.MainWindow"
+﻿<views:WindowBase x:Class="CatsTaskProject.Views.MainWindow"
         xmlns:reactiveui="https://www.reactiveui.net/"
         xmlns:viewModels="clr-namespace:CatsTaskProject.ViewModels"
         xmlns:views="clr-namespace:CatsTaskProject.Views"
@@ -18,4 +18,4 @@
         <Button Command="{Binding GetCatBreedsCommand}" Width="250" Height="50">GetBreeds</Button>
         <Label Content="{Binding}" Height="100" Width="100" Margin="562,167,138,167" Background="yellow"/>
     </Grid>
-</views:BaseWindow>
+</views:WindowBase>

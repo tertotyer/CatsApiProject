@@ -12,7 +12,7 @@ namespace CatsTaskProject.Managers
     {
         public static readonly CatAPIManager Instance = new();
 
-        private readonly HttpClient httpClient = new();
+        private readonly HttpClient _httpClient = new();
         
         private CatAPIManager()
         {
@@ -21,25 +21,25 @@ namespace CatsTaskProject.Managers
         public async Task<string> GetImageById(string imageId)
         {
             string url = $"https://api.thecatapi.com/v1/images/{imageId}";
-            return await httpClient.GetStringAsync(url);
+            return await _httpClient.GetStringAsync(url);
         }
 
         public async Task<string> GetBreeds(int quantity, int page)
         {
             string url = $"http://api.thecatapi.com/v1/breeds?limit={quantity}&page={page}";
-            return await httpClient.GetStringAsync(url);
+            return await _httpClient.GetStringAsync(url);
         }
 
         public async Task<string> GetBreedById(string id)
         {
             string url = $"http://api.thecatapi.com/v1/breeds/{id}";
-            return await httpClient.GetStringAsync(url);
+            return await _httpClient.GetStringAsync(url);
         }
 
         public async Task<string> GetBreedImages(string breed, int quantity)
         {
             string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breed}&limit={quantity}";
-            return await httpClient.GetStringAsync(url);
+            return await _httpClient.GetStringAsync(url);
         }
     }
 }

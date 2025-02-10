@@ -2,7 +2,7 @@
 
 namespace CatsTaskProject.Views
 {
-    public class BaseWindow : Window
+    public class WindowBase : Window
     {
     }
 }

@@ -1,16 +1,22 @@
-﻿using CatsTaskProject.Converters;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace CatsTaskProject.Models
 {
-    [JsonConverter(typeof(ImageJsonConverter))]
     public class CatImage
     {
+        [JsonPropertyName("id")]
         public required string Id { get; set; }
+
+        [JsonPropertyName("url")]
         public string Url { get; set; }
+
+        [JsonPropertyName("width")]
         public ushort Width { get; set; }
+
+        [JsonPropertyName("height")]
         public ushort Height { get; set; }
 
+        [JsonIgnore]
         public string BreedId { get; set; }
     }
 }

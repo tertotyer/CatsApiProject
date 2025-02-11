@@ -1,6 +1,8 @@
 ﻿using CatsTaskProject.Managers;
 using CatsTaskProject.Models;
+using DynamicData;
 using DynamicData.Binding;
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Windows.Input;
 
@@ -12,8 +14,11 @@ namespace CatsTaskProject.ViewModels
 
         public MainWindowViewModel()
         {
-            GetCatBreedsCommand = new DelegateCommand(GetCatBreeds);
+            Breeds = new ObservableCollection<Breed>();
+            GetCatBreeds();
         }
+
+        public ObservableCollection<Breed> Breeds { get; set; }
 
         public ICommand GetCatBreedsCommand { get; }
 
@@ -25,10 +30,14 @@ namespace CatsTaskProject.ViewModels
         private async void GetCatBreeds()
         {
             CatAPIManager apiManager = CatAPIManager.Instance;
-            string jsonResult = await apiManager.GetBreeds(20, 2);
+            string jsonResult = await apiManager.GetBreeds(20, _page++);
 
             IList<Breed> breeds = JsonSerializer.Deserialize<IList<Breed>>(jsonResult);
-            LoadBreedsImages(breeds);
+            if (breeds.Count > 0)
+            {
+                Breeds.AddRange(breeds);
+                LoadBreedsImages(breeds);
+            }
         }
 
         private async void LoadBreedsImages(IList<Breed> breeds)
@@ -56,7 +65,7 @@ namespace CatsTaskProject.ViewModels
                 }
                 else if (!imageManager.ImageAlreadyLoadedById(breeds[i].MainImageId))
                 {
-                    var jsonImage = await apiManager.GetImageById(breeds[i].MainImageId);
+                    string jsonImage = await apiManager.GetImageById(breeds[i].MainImageId);
 
                     await imageManager.LoadImage(JsonSerializer.Deserialize<CatImage>(jsonImage).Url);
                 }

@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Reflection;
 
@@ -17,7 +11,7 @@ namespace CatsTaskProject.Managers
 
         public ImageManager()
         {
-            _imageDirectory = Path.Combine(System.IO.Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Images");
+            _imageDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Images");
         }
 
         public string ImageDirectory
@@ -53,7 +47,7 @@ namespace CatsTaskProject.Managers
 
         private string GetImagePath(string imageUrl)
         {
-            return Path.Combine(_imageDirectory, System.IO.Path.GetFileName(imageUrl));
+            return Path.Combine(_imageDirectory, Path.GetFileName(imageUrl));
         }
     }
 }

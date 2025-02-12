@@ -39,7 +39,10 @@ namespace CatsTaskProject.Managers
 
         public static IList<Breed> FilterBreedCollectionByName(IList<Breed> breeds, string text)
         {
-            return breeds.Where(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Name).ToList();
+            var startBreeds = breeds.Where(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Name).ToList();
+            var containsBreeds = breeds.Where(x => x.Name.Contains(text, StringComparison.OrdinalIgnoreCase));
+
+            return startBreeds.Union(containsBreeds).DistinctBy(x => x.Id).ToList();
         }
 
         public static IList<Breed> GetAllNewBreeds(IList<Breed> collection, IList<Breed> newCollection)

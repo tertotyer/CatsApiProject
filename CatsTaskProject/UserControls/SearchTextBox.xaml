@@ -19,7 +19,7 @@
                      FontSize="16" FontWeight="Light"  Padding="5 0 0 0"
                      TextChanged="inputTextBox_TextChanged" GotFocus="inputTextBox_GotFocus" LostFocus="inputTextBox_LostFocus"/>
             <TextBlock Grid.Column="0"  x:Name="placeholderTextBlock" Text="{Binding Placeholder}" 
-                       FontSize="16" FontWeight="Light" Foreground="DarkGray" 
+                       FontSize="14" FontWeight="Light" Foreground="DarkGray" 
                        VerticalAlignment="Center" Margin="5 0 0 0"
                        Panel.ZIndex="-1"/>
             <Button Style="{DynamicResource SearchButtonStyle}" Grid.Column="1" x:Name="searchButton" HorizontalAlignment="Stretch"

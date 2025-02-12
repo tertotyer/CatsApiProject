@@ -10,8 +10,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:CatsTaskProject"
         mc:Ignorable="d"
-        MinHeight="500" MinWidth="400"
-        Title="MainWindow" Height="500" Width="400">
+        MinHeight="550" MinWidth="400"
+        Title="MainWindow" Height="550" Width="400">
 
     <Window.Resources>
         <Style TargetType="ListBoxItem">
@@ -38,7 +38,7 @@
                 <ColumnDefinition Width="50*"/>
             </Grid.ColumnDefinitions>
             <userControls:SearchTextBox x:Name="searchTextBox" Grid.Column="0" Placeholder="Search breed" 
-                                        KeyUp="searchTextBox_KeyUp" SearchCommand="{Binding SearchApiBreedsByNameCommand}" />
+                                        KeyUp="searchTextBox_KeyUp" SearchCommand="{Binding SearchBreedsByNameApiCommand}" />
             <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Width="140" MinWidth="140"/>
         </Grid>
 
@@ -53,10 +53,11 @@
                             <ColumnDefinition Width="70*"/>
                             <ColumnDefinition Width="10*"/>
                         </Grid.ColumnDefinitions>
-                        <Image Grid.Column="0" HorizontalAlignment="Left" Height="65" Width="60"/>
+                        <Image Grid.Column="0" HorizontalAlignment="Left" Height="65" Width="60"
+                               Source="{Binding MainImage.LocalImagePath}"/>
                         <StackPanel Grid.Column="1">
                             <Label Content="{Binding Name}" Margin="0" FontWeight="DemiBold" Padding="0 0 0 5"/>
-                            <TextBlock Text="{Binding Description}"  TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left"/>
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Left"/>
                         </StackPanel>
                         <Label Grid.Column="2" Content="X" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                     </Grid>

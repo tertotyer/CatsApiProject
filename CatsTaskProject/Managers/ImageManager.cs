@@ -63,7 +63,7 @@ namespace CatsTaskProject.Managers
             return File.Exists(GetImagePath(imageUrl));
         }
 
-        private string GetImagePath(string imageUrl)
+        internal string GetImagePath(string imageUrl)
         {
             return Path.Combine(_imageDirectory, Path.GetFileName(imageUrl));
         }

@@ -14,12 +14,13 @@ namespace CatsTaskProject.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private int _page = 0;
+        private bool _isLastBreedsEmpty = false;
         private ObservableCollection<Breed> _filteredBreeds;
 
         public MainWindowViewModel()
         {
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
-            SearchApiBreedsByNameCommand = new DelegateCommand(async text => await SearchApiBreedsByName(text));
+            SearchBreedsByNameApiCommand = new DelegateCommand(async text => await SearchBreedsByNameApi(text));
 
             Breeds = new ObservableCollection<Breed>();
             FilteredBreeds = new ObservableCollection<Breed>();
@@ -35,7 +36,7 @@ namespace CatsTaskProject.ViewModels
         }
 
         public ICommand FilterBreedsByNameCommand { get; }
-        public ICommand SearchApiBreedsByNameCommand { get; }
+        public ICommand SearchBreedsByNameApiCommand { get; }
 
         internal void ResetPage()
         {
@@ -93,14 +94,20 @@ namespace CatsTaskProject.ViewModels
                 FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(Breeds, text.ToString()));
                 if (FilteredBreeds.Count < 1)
                 {
-                    await SearchApiBreedsByName(text);
+                    await SearchBreedsByNameApi(text);
+                    return;
                 }
             }
+            else
+            {
+                FilteredBreeds = new ObservableCollection<Breed>(Breeds);
+            }
+            _isLastBreedsEmpty = false;
         }
 
-        private async Task SearchApiBreedsByName(object text)
+        private async Task SearchBreedsByNameApi(object text)
         {
-            if (!string.IsNullOrEmpty(text.ToString()))
+            if (!string.IsNullOrEmpty(text.ToString()) && !_isLastBreedsEmpty)
             {
                 BreedManager breedManager = new();
                 IList<Breed> foundBreeds = await breedManager.SearchBreedsByName(text.ToString());
@@ -109,7 +116,16 @@ namespace CatsTaskProject.ViewModels
                 Breeds.AddRange(newBreeds);
                 LoadBreedsImages(newBreeds);
 
-                FilteredBreeds = new ObservableCollection<Breed>(foundBreeds);
+                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(foundBreeds, text.ToString()));
+
+                if (foundBreeds.Count > 0)
+                {
+                    _isLastBreedsEmpty = false;
+                }
+                else
+                {
+                    _isLastBreedsEmpty = true;
+                }
             }
         }
     }

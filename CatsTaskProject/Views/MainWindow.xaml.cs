@@ -17,9 +17,19 @@ namespace CatsTaskProject.Views
 
         private void searchTextBox_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            SearchTextBox textBox = sender as SearchTextBox;
-            MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
-            viewModel.FilterBreedsByNameCommand.Execute(textBox.Text);
+            if ((e.Key >= System.Windows.Input.Key.A && e.Key <= System.Windows.Input.Key.Z) ||
+                e.Key == System.Windows.Input.Key.Back)
+            {
+                SearchTextBox textBox = sender as SearchTextBox;
+                MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
+                viewModel.FilterBreedsByNameCommand.Execute(textBox.Text);
+            }
+            else if (e.Key == System.Windows.Input.Key.Enter)
+            {
+                SearchTextBox textBox = sender as SearchTextBox;
+                MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
+                viewModel.SearchBreedsByNameApiCommand.Execute(textBox.Text);
+            }
         }
     }
 }

@@ -6,10 +6,16 @@
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\paw.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\loupe.png" />
+    <None Remove="Resources\paw.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\paw.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -19,6 +25,7 @@
 
   <ItemGroup>
     <Resource Include="Resources\loupe.png" />
+    <Resource Include="Resources\paw.ico" />
   </ItemGroup>
 
 </Project>

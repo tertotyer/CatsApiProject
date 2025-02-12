@@ -25,7 +25,10 @@ namespace CatsTaskProject.Models
 
         public string WikipediaUrl { get; set; }
 
+        
         public string MainImageId { get; set; }
+        public CatImage MainImage { get; set; }
+
 
         public ObservableCollection<string> ImagesIds { get; set; }
 

@@ -10,6 +10,8 @@ namespace CatsTaskProject.Models
 
         public string Url { get; set; }
 
+        public string LocalImagePath { get; set; }
+
         public short Width { get; set; }
 
         public short Height { get; set; }

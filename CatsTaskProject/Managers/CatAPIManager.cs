@@ -41,5 +41,11 @@ namespace CatsTaskProject.Managers
             string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breed}&limit={quantity}";
             return await _httpClient.GetStringAsync(url);
         }
+
+        public async Task<string>SearchBreedByName(string searchString, bool attachImage)
+        {
+            string url = $"http://api.thecatapi.com/v1/breeds/search?q={searchString}&attach_image={attachImage}";
+            return await _httpClient.GetStringAsync(url);
+        }
     }
 }

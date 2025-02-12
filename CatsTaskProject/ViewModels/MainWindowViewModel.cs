@@ -19,8 +19,8 @@ namespace CatsTaskProject.ViewModels
             FilterBreedsByNameCommand = new DelegateCommand(text => FilterBreedsByName(text));
 
             Breeds = new ObservableCollection<Breed>();
+            FilteredBreeds = new ObservableCollection<Breed>();
             GetCatBreeds();
-            FilteredBreeds = Breeds;
 
             SearchBreedsCommands = new DelegateCommand(_ => SearchBreed());
         }
@@ -48,8 +48,9 @@ namespace CatsTaskProject.ViewModels
             IList<Breed> breeds = JsonSerializer.Deserialize<IList<Breed>>(jsonResult);
             if (breeds.Count > 0)
             {
-                Breeds.AddRange(breeds);
+                Breeds = new ObservableCollection<Breed>(Breeds.Union(breeds).DistinctBy(x => x.Id));
                 LoadBreedsImages(breeds);
+                FilteredBreeds = Breeds;
             }
         }
 
@@ -92,7 +93,10 @@ namespace CatsTaskProject.ViewModels
 
         private void SearchBreed()
         {
+            if (FilteredBreeds.Count < 1)
+            {
 
+            }
         }
     }
 }

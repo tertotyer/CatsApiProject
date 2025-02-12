@@ -28,5 +28,7 @@ namespace CatsTaskProject.Models
         public string MainImageId { get; set; }
 
         public ObservableCollection<string> ImagesIds { get; set; }
+
+        public bool IsFavorite { get; set; }
     }
 }

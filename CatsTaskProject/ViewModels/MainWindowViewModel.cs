@@ -1,7 +1,8 @@
 ﻿using CatsTaskProject.Managers;
 using CatsTaskProject.Models;
+using CatsTaskProject.ViewModels.Commands;
 using DynamicData;
-using DynamicData.Binding;
+using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Windows.Input;
@@ -11,16 +12,28 @@ namespace CatsTaskProject.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private int _page = 0;
+        private ObservableCollection<Breed> _filteredBreeds;
 
         public MainWindowViewModel()
         {
+            FilterBreedsByNameCommand = new DelegateCommand(text => FilterBreedsByName(text));
+
             Breeds = new ObservableCollection<Breed>();
             GetCatBreeds();
+            FilteredBreeds = Breeds;
+
+            SearchBreedsCommands = new DelegateCommand(_ => SearchBreed());
         }
 
         public ObservableCollection<Breed> Breeds { get; set; }
+        public ObservableCollection<Breed> FilteredBreeds
+        {
+            get => _filteredBreeds;
+            set => this.RaiseAndSetIfChanged(ref _filteredBreeds, value);
+        }
 
-        public ICommand GetCatBreedsCommand { get; }
+        public ICommand FilterBreedsByNameCommand { get; }
+        public ICommand SearchBreedsCommands { get; }
 
         internal void ResetPage()
         {
@@ -70,6 +83,16 @@ namespace CatsTaskProject.ViewModels
                     await imageManager.LoadImage(JsonSerializer.Deserialize<CatImage>(jsonImage).Url);
                 }
             }
+        }
+
+        private void FilterBreedsByName(object text)
+        {
+            FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(Breeds, text.ToString()));
+        }
+
+        private void SearchBreed()
+        {
+
         }
     }
 }

@@ -9,8 +9,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\loupe.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="ReactiveUI" Version="20.1.63" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\loupe.png" />
   </ItemGroup>
 
 </Project>

@@ -1,32 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
-namespace CatsTaskProject.Views.UserControls
+namespace CatsTaskProject.UserControls
 {
-    /// <summary>
-    /// Логика взаимодействия для SearchTextBox.xaml
-    /// </summary>
+
     public partial class SearchTextBox : UserControl
     {
+        public static readonly DependencyProperty SearchCommandProperty = 
+            DependencyProperty.Register("SearchCommand", typeof(ICommand), typeof(SearchTextBox), new PropertyMetadata(default(ICommand)));
+
+        public ICommand SearchCommand
+        {
+            get { return (ICommand)GetValue(SearchCommandProperty); }
+            set { SetValue(SearchCommandProperty, value); }
+        }
+
         public SearchTextBox()
         {
             InitializeComponent();
         }
 
         private string _placeholder;
-
         public string Placeholder
         {
             get => _placeholder;
@@ -37,15 +33,14 @@ namespace CatsTaskProject.Views.UserControls
             }
         }
 
-        private void clearButton_Click(object sender, RoutedEventArgs e)
+        public string Text
         {
-            inputTextBox.Clear();
-            inputTextBox.Focus();
+            get => inputTextBox.Text;
         }
 
         private void inputTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (string.IsNullOrEmpty(inputTextBox.Text))
+            if (string.IsNullOrEmpty(inputTextBox.Text) && !inputTextBox.IsFocused)
                 placeholderTextBlock.Visibility = Visibility.Visible;
             else placeholderTextBlock.Visibility = Visibility.Hidden;
         }
@@ -60,6 +55,11 @@ namespace CatsTaskProject.Views.UserControls
             if (string.IsNullOrEmpty(inputTextBox.Text))
                 placeholderTextBlock.Visibility = Visibility.Visible;
             else placeholderTextBlock.Visibility = Visibility.Hidden;
+        }
+
+        private void searchButton_Click(object sender, RoutedEventArgs e)
+        {
+            SearchCommand.Execute(null);
         }
     }
 }

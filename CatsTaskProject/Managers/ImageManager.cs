@@ -1,7 +1,9 @@
-﻿using System.Drawing;
+﻿using CatsTaskProject.Models;
+using System.Drawing;
 using System.IO;
 using System.Net.Http;
 using System.Reflection;
+using System.Text.Json;
 
 namespace CatsTaskProject.Managers
 {
@@ -17,6 +19,22 @@ namespace CatsTaskProject.Managers
         public string ImageDirectory
         {
             get => _imageDirectory;
+        }
+
+        public async Task<CatImage> GetImageById(string imageId)
+        {
+            CatAPIManager apiManager = CatAPIManager.Instance;
+            string jsonImage = await apiManager.GetImageById(imageId);
+
+            return JsonSerializer.Deserialize<CatImage>(jsonImage);
+        }
+
+        public async Task<IList<CatImage>> GetBreedImages(string breedId, int quantity)
+        {
+            CatAPIManager apiManager = CatAPIManager.Instance;
+            string jsonImage = await apiManager.GetBreedImages(breedId, quantity);
+
+            return JsonSerializer.Deserialize<IList<CatImage>>(jsonImage);
         }
 
         public async Task LoadImage(string imageUrl)

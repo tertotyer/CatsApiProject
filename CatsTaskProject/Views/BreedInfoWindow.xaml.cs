@@ -15,9 +15,6 @@ using System.Windows.Shapes;
 
 namespace CatsTaskProject.Views
 {
-    /// <summary>
-    /// Логика взаимодействия для BreedInfoWindow.xaml
-    /// </summary>
     public partial class BreedInfoWindow : WindowBase
     {
         public BreedInfoWindow()

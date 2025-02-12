@@ -37,8 +37,8 @@
                 <ColumnDefinition Width="50*"/>
                 <ColumnDefinition Width="50*"/>
             </Grid.ColumnDefinitions>
-            <userControls:SearchTextBox x:Name="searchTextBox" Grid.Column="0" Placeholder="Search breed" KeyUp="searchTextBox_KeyUp" 
-                                        SearchCommand="{Binding SearchBreedsCommands}"/>
+            <userControls:SearchTextBox x:Name="searchTextBox" Grid.Column="0" Placeholder="Search breed" 
+                                        KeyUp="searchTextBox_KeyUp" SearchCommand="{Binding SearchApiBreedsByNameCommand}" />
             <ComboBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18" Width="140" MinWidth="140"/>
         </Grid>
 

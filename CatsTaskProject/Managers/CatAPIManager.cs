@@ -18,12 +18,6 @@ namespace CatsTaskProject.Managers
         {
         }
 
-        public async Task<string> GetImageById(string imageId)
-        {
-            string url = $"https://api.thecatapi.com/v1/images/{imageId}";
-            return await _httpClient.GetStringAsync(url);
-        }
-
         public async Task<string> GetBreeds(int quantity, int page)
         {
             string url = $"http://api.thecatapi.com/v1/breeds?limit={quantity}&page={page}";
@@ -36,15 +30,22 @@ namespace CatsTaskProject.Managers
             return await _httpClient.GetStringAsync(url);
         }
 
-        public async Task<string> GetBreedImages(string breed, int quantity)
+        public async Task<string> SearchBreedsByName(string searchString, bool attachImage = true)
         {
-            string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breed}&limit={quantity}";
+            string url = $"http://api.thecatapi.com/v1/breeds/search?q={searchString}&attach_image={attachImage}";
             return await _httpClient.GetStringAsync(url);
         }
 
-        public async Task<string>SearchBreedByName(string searchString, bool attachImage)
+
+        public async Task<string> GetImageById(string imageId)
         {
-            string url = $"http://api.thecatapi.com/v1/breeds/search?q={searchString}&attach_image={attachImage}";
+            string url = $"https://api.thecatapi.com/v1/images/{imageId}";
+            return await _httpClient.GetStringAsync(url);
+        }
+
+        public async Task<string> GetBreedImages(string breedId, int quantity)
+        {
+            string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breedId}&limit={quantity}";
             return await _httpClient.GetStringAsync(url);
         }
     }

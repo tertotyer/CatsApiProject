@@ -5,7 +5,9 @@ using DynamicData;
 using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace CatsTaskProject.ViewModels
 {
@@ -16,13 +18,13 @@ namespace CatsTaskProject.ViewModels
 
         public MainWindowViewModel()
         {
-            FilterBreedsByNameCommand = new DelegateCommand(text => FilterBreedsByName(text));
+            FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
+            SearchApiBreedsByNameCommand = new DelegateCommand(async text => await SearchApiBreedsByName(text));
 
             Breeds = new ObservableCollection<Breed>();
             FilteredBreeds = new ObservableCollection<Breed>();
-            GetCatBreeds();
 
-            SearchBreedsCommands = new DelegateCommand(_ => SearchBreed());
+            GetCatBreeds();
         }
 
         public ObservableCollection<Breed> Breeds { get; set; }
@@ -33,7 +35,7 @@ namespace CatsTaskProject.ViewModels
         }
 
         public ICommand FilterBreedsByNameCommand { get; }
-        public ICommand SearchBreedsCommands { get; }
+        public ICommand SearchApiBreedsByNameCommand { get; }
 
         internal void ResetPage()
         {
@@ -42,14 +44,14 @@ namespace CatsTaskProject.ViewModels
 
         private async void GetCatBreeds()
         {
-            CatAPIManager apiManager = CatAPIManager.Instance;
-            string jsonResult = await apiManager.GetBreeds(20, _page++);
-
-            IList<Breed> breeds = JsonSerializer.Deserialize<IList<Breed>>(jsonResult);
-            if (breeds.Count > 0)
+            BreedManager breedManager = new();
+            IList<Breed> loadedBreeds = await breedManager.GetBreeds(20, _page++);
+            if (loadedBreeds.Count > 0)
             {
-                Breeds = new ObservableCollection<Breed>(Breeds.Union(breeds).DistinctBy(x => x.Id));
-                LoadBreedsImages(breeds);
+                IList<Breed> newBreeds = BreedManager.GetAllNewBreeds(Breeds, loadedBreeds);
+                Breeds.AddRange(newBreeds);
+                LoadBreedsImages(newBreeds);
+
                 FilteredBreeds = Breeds;
             }
         }
@@ -57,14 +59,13 @@ namespace CatsTaskProject.ViewModels
         private async void LoadBreedsImages(IList<Breed> breeds)
         {
             ImageManager imageManager = new();
+
             for (int i = 0; i < breeds.Count; i++)
             {
-                CatAPIManager apiManager = CatAPIManager.Instance;
                 if (breeds[i].MainImageId is null)
                 {
-                    string jsonImage = await apiManager.GetBreedImages(breeds[i].Id, 1);
+                    IList<CatImage> images = await imageManager.GetBreedImages(breeds[i].Id, 1);
 
-                    List<CatImage> images = JsonSerializer.Deserialize<List<CatImage>>(jsonImage);
                     if (images.Count > 0)
                     {
                         breeds[i].MainImageId = images[0].Id;
@@ -79,23 +80,36 @@ namespace CatsTaskProject.ViewModels
                 }
                 else if (!imageManager.ImageAlreadyLoadedById(breeds[i].MainImageId))
                 {
-                    string jsonImage = await apiManager.GetImageById(breeds[i].MainImageId);
-
-                    await imageManager.LoadImage(JsonSerializer.Deserialize<CatImage>(jsonImage).Url);
+                    CatImage image = await imageManager.GetImageById(breeds[i].MainImageId);
+                    await imageManager.LoadImage(image.Url);
                 }
             }
         }
 
-        private void FilterBreedsByName(object text)
+        private async Task FilterBreedsByName(object text)
         {
-            FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(Breeds, text.ToString()));
+            if (text != null)
+            {
+                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(Breeds, text.ToString()));
+                if (FilteredBreeds.Count < 1)
+                {
+                    await SearchApiBreedsByName(text);
+                }
+            }
         }
 
-        private void SearchBreed()
+        private async Task SearchApiBreedsByName(object text)
         {
-            if (FilteredBreeds.Count < 1)
+            if (!string.IsNullOrEmpty(text.ToString()))
             {
+                BreedManager breedManager = new();
+                IList<Breed> foundBreeds = await breedManager.SearchBreedsByName(text.ToString());
 
+                IList<Breed> newBreeds = BreedManager.GetAllNewBreeds(Breeds, foundBreeds);
+                Breeds.AddRange(newBreeds);
+                LoadBreedsImages(newBreeds);
+
+                FilteredBreeds = new ObservableCollection<Breed>(foundBreeds);
             }
         }
     }

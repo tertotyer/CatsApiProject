@@ -59,7 +59,7 @@ namespace CatsTaskProject.UserControls
 
         private void searchButton_Click(object sender, RoutedEventArgs e)
         {
-            SearchCommand.Execute(null);
+            SearchCommand.Execute(inputTextBox.Text);
         }
     }
 }

@@ -7,8 +7,17 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\paw.ico</ApplicationIcon>
-    <UserSecretsId>51e3497f-2caf-49e0-9ae1-879d807618b8</UserSecretsId>
+    <UserSecretsId>a9a3c778-c10c-4d82-9c09-64417313bce2</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\LeftArrow.png" />
+    <None Remove="Resources\LeftArrowImage.png" />
+    <None Remove="Resources\Loupe.png" />
+    <None Remove="Resources\paw.ico" />
+    <None Remove="Resources\RightArrowImage.png" />
+    <None Remove="Resources\Star.png" />
+  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resources\paw.ico" />
@@ -16,14 +25,18 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.2" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.135" />
     <PackageReference Include="ReactiveUI" Version="20.1.63" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\LeftArrow.png" />
+    <Resource Include="Resources\LeftArrowImage.png" />
     <Resource Include="Resources\Loupe.png" />
     <Resource Include="Resources\paw.ico" />
+    <Resource Include="Resources\RightArrowImage.png" />
+    <Resource Include="Resources\Star.png" />
   </ItemGroup>
 
 </Project>

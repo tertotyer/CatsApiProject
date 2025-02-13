@@ -17,7 +17,6 @@ namespace CatsTaskProject.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
-        private const int BreedLoadImagesCount = 5;
         private const int BreedsLoadCountPerPage = 20;
 
         private int _page = 0;
@@ -28,12 +27,9 @@ namespace CatsTaskProject.ViewModels
         {
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
             FilterBreedsByNameApiCommand = new DelegateCommand(async text => await FilterBreedsByNameApi(text));
-            OpenBreedInfoWindowCommand = new DelegateCommand(async obj =>
+            OpenBreedInfoWindowCommand = new DelegateCommand(obj =>
             {
                 Breed breed = obj as Breed;
-                breed.Images = new ObservableCollection<CatImage>(await new ImageManager().GetBreedImages(breed.Id, BreedLoadImagesCount));
-                LoadBreedImages(breed.Images);
-
                 BreedInfoWindow breedInfoWindow = new(breed);
                 breedInfoWindow.ShowDialog();
             });
@@ -106,20 +102,7 @@ namespace CatsTaskProject.ViewModels
             }
         }
 
-        private async void LoadBreedImages(ICollection<CatImage> images)
-        {
-            ImageManager imageManager = new();
-            foreach (CatImage image in images)
-            {
-                string fullPath = string.Empty;
-                bool result = imageManager.ImageAlreadyLoadedById(image.Id);
-                if (!result)
-                {
-                    await imageManager.LoadImage(image.Url);
-                }
-                image.LocalImagePath = imageManager.GetImagePath(image.Url);
-            }
-        }
+
 
         private async Task FilterBreedsByName(object text)
         {

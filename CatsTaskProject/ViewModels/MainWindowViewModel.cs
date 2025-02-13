@@ -4,6 +4,8 @@ using CatsTaskProject.ViewModels.Commands;
 using DynamicData;
 using ReactiveUI;
 using System.Collections.ObjectModel;
+using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -14,13 +16,13 @@ namespace CatsTaskProject.ViewModels
     public class MainWindowViewModel : ViewModelBase
     {
         private int _page = 0;
-        private bool _isLastBreedsEmpty = false;
+        private bool _isLastFilteredBreedsEmpty = false;
         private ObservableCollection<Breed> _filteredBreeds;
 
         public MainWindowViewModel()
         {
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
-            SearchBreedsByNameApiCommand = new DelegateCommand(async text => await SearchBreedsByNameApi(text));
+            FilterBreedsByNameApiCommand = new DelegateCommand(async text => await FilterBreedsByNameApi(text));
 
             Breeds = new ObservableCollection<Breed>();
             FilteredBreeds = new ObservableCollection<Breed>();
@@ -36,7 +38,7 @@ namespace CatsTaskProject.ViewModels
         }
 
         public ICommand FilterBreedsByNameCommand { get; }
-        public ICommand SearchBreedsByNameApiCommand { get; }
+        public ICommand FilterBreedsByNameApiCommand { get; }
 
         internal void ResetPage()
         {
@@ -60,7 +62,6 @@ namespace CatsTaskProject.ViewModels
         private async void LoadBreedsImages(IList<Breed> breeds)
         {
             ImageManager imageManager = new();
-
             for (int i = 0; i < breeds.Count; i++)
             {
                 if (breeds[i].MainImageId is null)
@@ -69,8 +70,9 @@ namespace CatsTaskProject.ViewModels
 
                     if (images.Count > 0)
                     {
-                        breeds[i].MainImageId = images[0].Id;
-                        await imageManager.LoadImage(images[0].Url);
+                        CatImage image = images[0];
+                        await imageManager.LoadImage(image.Url);
+                        breeds[i].AddImage(image);
                     }
                     else
                     {
@@ -79,10 +81,20 @@ namespace CatsTaskProject.ViewModels
                         continue;
                     }
                 }
-                else if (!imageManager.ImageAlreadyLoadedById(breeds[i].MainImageId))
+                else
                 {
-                    CatImage image = await imageManager.GetImageById(breeds[i].MainImageId);
-                    await imageManager.LoadImage(image.Url);
+                    string fullPath = string.Empty;
+                    bool result = imageManager.ImageAlreadyLoadedById(breeds[i].MainImageId, out fullPath);
+                    if (!result)
+                    {
+                        CatImage image = await imageManager.GetImageById(breeds[i].MainImageId);
+                        await imageManager.LoadImage(image.Url);
+                        breeds[i].AddImage(image);
+                    }
+                    else
+                    {
+                        breeds[i].AddImage(fullPath);
+                    }
                 }
             }
         }
@@ -94,7 +106,7 @@ namespace CatsTaskProject.ViewModels
                 FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(Breeds, text.ToString()));
                 if (FilteredBreeds.Count < 1)
                 {
-                    await SearchBreedsByNameApi(text);
+                    await FilterBreedsByNameApi(text);
                     return;
                 }
             }
@@ -102,29 +114,34 @@ namespace CatsTaskProject.ViewModels
             {
                 FilteredBreeds = new ObservableCollection<Breed>(Breeds);
             }
-            _isLastBreedsEmpty = false;
+            _isLastFilteredBreedsEmpty = false;
         }
 
-        private async Task SearchBreedsByNameApi(object text)
+        private async Task FilterBreedsByNameApi(object text)
         {
-            if (!string.IsNullOrEmpty(text.ToString()) && !_isLastBreedsEmpty)
+            if (!string.IsNullOrEmpty(text.ToString()) && !_isLastFilteredBreedsEmpty)
             {
                 BreedManager breedManager = new();
                 IList<Breed> foundBreeds = await breedManager.SearchBreedsByName(text.ToString());
 
                 IList<Breed> newBreeds = BreedManager.GetAllNewBreeds(Breeds, foundBreeds);
+
                 Breeds.AddRange(newBreeds);
                 LoadBreedsImages(newBreeds);
 
+                foreach (var breed in foundBreeds)
+                {
+                    breed.MainImage = Breeds.FirstOrDefault(x => x.Id == breed.Id)?.MainImage;
+                }
                 FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(foundBreeds, text.ToString()));
 
                 if (foundBreeds.Count > 0)
                 {
-                    _isLastBreedsEmpty = false;
+                    _isLastFilteredBreedsEmpty = false;
                 }
                 else
                 {
-                    _isLastBreedsEmpty = true;
+                    _isLastFilteredBreedsEmpty = true;
                 }
             }
         }

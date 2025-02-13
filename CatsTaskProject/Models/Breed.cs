@@ -1,11 +1,13 @@
 ﻿using CatsTaskProject.Converters;
+using CatsTaskProject.Managers;
+using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.Text.Json.Serialization;
 
 namespace CatsTaskProject.Models
 {
     [JsonConverter(typeof(BreedJsonConverter))]
-    public class Breed
+    public class Breed : ReactiveObject
     {
         public required string Id { get; set; }
 
@@ -27,11 +29,35 @@ namespace CatsTaskProject.Models
 
         
         public string MainImageId { get; set; }
-        public CatImage MainImage { get; set; }
+
+        private CatImage _mainImage;
+        public CatImage MainImage
+        {
+            get => _mainImage;
+            set => this.RaiseAndSetIfChanged(ref _mainImage, value);
+        }
 
 
         public ObservableCollection<string> ImagesIds { get; set; }
 
         public bool IsFavorite { get; set; }
+
+
+        public void AddImage(CatImage image)
+        {
+            MainImage = image;
+            MainImageId = image.Id;
+            MainImage.LocalImagePath = new ImageManager().GetImagePath(MainImage.Url);
+        }
+
+        public void AddImage(string imagePath)
+        {
+            MainImage = new CatImage()
+            {
+                Id = MainImageId,
+            };
+
+            MainImage.LocalImagePath = imagePath;
+        }
     }
 }

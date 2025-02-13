@@ -28,7 +28,7 @@ namespace CatsTaskProject.Views
             {
                 SearchTextBox textBox = sender as SearchTextBox;
                 MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
-                viewModel.SearchBreedsByNameApiCommand.Execute(textBox.Text);
+                viewModel.FilterBreedsByNameApiCommand.Execute(textBox.Text);
             }
         }
     }

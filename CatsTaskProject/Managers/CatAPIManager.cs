@@ -16,6 +16,7 @@ namespace CatsTaskProject.Managers
         
         private CatAPIManager()
         {
+            _httpClient.DefaultRequestHeaders.Add("x-api-key", "DEMO_API_KEY");
         }
 
         public async Task<string> GetBreeds(int quantity, int page)

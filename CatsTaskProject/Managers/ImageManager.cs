@@ -50,12 +50,23 @@ namespace CatsTaskProject.Managers
             image.Save(imagePath); 
         }
 
-        public bool ImageAlreadyLoadedById(string imageId)
+        public bool ImageAlreadyLoadedById(string imageId, out string fullPath)
         {
             DirectoryInfo root = new(_imageDirectory);
             string searchPattern = string.Concat(imageId, ".*");
 
-            return root.GetFiles(searchPattern).Length > 0;
+            FileInfo[] files = root.GetFiles(searchPattern);
+            if (files.Length == 0)
+            {
+                fullPath = string.Empty;
+                return false;
+            }
+            else
+            {
+                fullPath= files[0].FullName;
+            }
+
+            return true;
         }
 
         public bool ImageAlreadyLoadedByUrl(string imageUrl)

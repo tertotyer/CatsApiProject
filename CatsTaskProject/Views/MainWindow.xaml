@@ -12,7 +12,7 @@
         mc:Ignorable="d"
         x:Name="MainWindowName"
         MinHeight="600" MinWidth="400"
-        Title="MainWindow" Height="600" Width="400">
+        Title="Breeds" Height="600" Width="400">
 
     <Window.Resources>
         <Style TargetType="ListBoxItem">

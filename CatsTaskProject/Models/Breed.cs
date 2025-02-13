@@ -52,15 +52,5 @@ namespace CatsTaskProject.Models
             MainImageId = image.Id;
             MainImage.LocalImagePath = new ImageManager().GetImagePath(MainImage.Url);
         }
-
-        public void SetMainImage(string imagePath)
-        {
-            MainImage = new CatImage()
-            {
-                Id = MainImageId,
-            };
-
-            MainImage.LocalImagePath = imagePath;
-        }
     }
 }

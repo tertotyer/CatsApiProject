@@ -81,7 +81,6 @@ namespace CatsTaskProject.ViewModels
                 if (breeds[i].MainImageId is null)
                 {
                     IList<CatImage> images = await imageManager.GetBreedImages(breeds[i].Id, 1);
-
                     if (images.Count > 0)
                     {
                         CatImage image = images[0];
@@ -97,19 +96,13 @@ namespace CatsTaskProject.ViewModels
                 }
                 else
                 {
-                    string fullPath = string.Empty;
-                    bool result = imageManager.ImageAlreadyLoadedById(breeds[i].MainImageId, out fullPath);
+                    bool result = imageManager.ImageAlreadyLoadedById(breeds[i].MainImageId);
                     if (!result)
                     {
-                        CatImage image = await imageManager.GetImageById(breeds[i].MainImageId);
-                        await imageManager.LoadImage(image.Url);
-                        breeds[i].SetMainImage(image);
-                    }
-                    else
-                    {
-                        breeds[i].SetMainImage(fullPath);
+                        await imageManager.LoadImage(breeds[i].MainImage.Url);
                     }
                 }
+                breeds[i].MainImage.LocalImagePath = imageManager.GetImagePath(breeds[i].MainImage.Url);
             }
         }
 
@@ -119,7 +112,7 @@ namespace CatsTaskProject.ViewModels
             foreach (CatImage image in images)
             {
                 string fullPath = string.Empty;
-                bool result = imageManager.ImageAlreadyLoadedById(image.Id, out fullPath);
+                bool result = imageManager.ImageAlreadyLoadedById(image.Id);
                 if (!result)
                 {
                     await imageManager.LoadImage(image.Url);

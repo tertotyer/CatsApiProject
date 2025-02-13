@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -16,6 +17,8 @@ namespace CatsTaskProject.Managers
         
         private CatAPIManager()
         {
+            string apiKey = App.Configuration["x-api-key"];
+            _httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
         }
 
         public async Task<string> GetBreeds(int quantity, int page)

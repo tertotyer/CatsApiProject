@@ -12,7 +12,6 @@ namespace CatsTaskProject.Models
 
         public string Url { get; set; }
 
-
         public short Width { get; set; }
 
         public short Height { get; set; }

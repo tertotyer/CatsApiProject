@@ -34,7 +34,7 @@
         <Grid Grid.Row="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="40"/>
-                <ColumnDefinition Width="100"/>
+                <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Grid.Column="0" Style="{DynamicResource TransparentButton}" FontWeight="Bold" Margin="0 5 10 5" Click="backButton_Click">
                 <Image Source="/Resources/LeftArrow.png"/>

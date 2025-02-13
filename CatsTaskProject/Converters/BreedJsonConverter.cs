@@ -19,6 +19,7 @@ namespace CatsTaskProject.Converters
         public override Breed Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             using JsonDocument jsonDoc = JsonDocument.ParseValue(ref reader);
+
             Breed breed = new()
             {
                 Id = jsonDoc.RootElement.TryGetProperty("id", out JsonElement valId) ? valId.GetString() : null,
@@ -30,7 +31,8 @@ namespace CatsTaskProject.Converters
                 Intelligence = jsonDoc.RootElement.TryGetProperty("intelligence", out JsonElement valIntelligence) ? valIntelligence.GetInt16() : (short)-1,
                 SocialNeeds =   jsonDoc.RootElement.TryGetProperty("social_needs", out JsonElement valSocial) ? valSocial.GetInt16() : (short)-1,
                 WikipediaUrl = jsonDoc.RootElement.TryGetProperty("wikipedia_url", out JsonElement valWikipedia) ? valWikipedia.GetString() : null,
-                MainImageId = jsonDoc.RootElement.TryGetProperty("reference_image_id", out JsonElement valImage) ? valImage.GetString() : null,
+                MainImageId = jsonDoc.RootElement.TryGetProperty("reference_image_id", out JsonElement valImageId) ? valImageId.GetString() : null,
+                MainImage = jsonDoc.RootElement.TryGetProperty("image", out JsonElement valImage) ? JsonSerializer.Deserialize<CatImage>(valImage) : null,
             };
             return breed;
         }

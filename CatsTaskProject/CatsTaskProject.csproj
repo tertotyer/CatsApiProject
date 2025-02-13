@@ -7,19 +7,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <ApplicationIcon>Resources\paw.ico</ApplicationIcon>
+    <UserSecretsId>51e3497f-2caf-49e0-9ae1-879d807618b8</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Remove="Resources\leftArrow.png" />
-    <None Remove="Resources\loupe.png" />
-    <None Remove="Resources\paw.ico" />
-  </ItemGroup>
 
   <ItemGroup>
     <Content Include="Resources\paw.ico" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="9.0.2" />
     <PackageReference Include="ReactiveUI" Version="20.1.63" />
     <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
   </ItemGroup>

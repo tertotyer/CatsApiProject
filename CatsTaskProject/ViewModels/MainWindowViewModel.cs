@@ -1,4 +1,5 @@
 ﻿using CatsTaskProject.Managers;
+using CatsTaskProject.Managers.Interfaces;
 using CatsTaskProject.Models;
 using CatsTaskProject.ViewModels.Commands;
 using CatsTaskProject.Views;
@@ -16,6 +17,9 @@ namespace CatsTaskProject.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
+        private const int BreedLoadImagesCount = 5;
+        private const int BreedsLoadCountPerPage = 20;
+
         private int _page = 0;
         private bool _isLastFilteredBreedsEmpty = false;
         private ObservableCollection<Breed> _filteredBreeds;
@@ -24,9 +28,13 @@ namespace CatsTaskProject.ViewModels
         {
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
             FilterBreedsByNameApiCommand = new DelegateCommand(async text => await FilterBreedsByNameApi(text));
-            OpenBreedInfoWindowCommand = new DelegateCommand(obj =>
+            OpenBreedInfoWindowCommand = new DelegateCommand(async obj =>
             {
-                BreedInfoWindow breedInfoWindow = new BreedInfoWindow();
+                Breed breed = obj as Breed;
+                breed.Images = new ObservableCollection<CatImage>(await new ImageManager().GetBreedImages(breed.Id, BreedLoadImagesCount));
+                LoadBreedImages(breed.Images);
+
+                BreedInfoWindow breedInfoWindow = new(breed);
                 breedInfoWindow.ShowDialog();
             });
             Breeds = new ObservableCollection<Breed>();
@@ -54,7 +62,7 @@ namespace CatsTaskProject.ViewModels
         private async void GetCatBreeds()
         {
             BreedManager breedManager = new();
-            IList<Breed> loadedBreeds = await breedManager.GetBreeds(20, _page++);
+            IList<Breed> loadedBreeds = await breedManager.GetBreeds(BreedsLoadCountPerPage, _page++);
             if (loadedBreeds.Count > 0)
             {
                 IList<Breed> newBreeds = BreedManager.GetAllNewBreeds(Breeds, loadedBreeds);
@@ -78,7 +86,7 @@ namespace CatsTaskProject.ViewModels
                     {
                         CatImage image = images[0];
                         await imageManager.LoadImage(image.Url);
-                        breeds[i].AddImage(image);
+                        breeds[i].SetMainImage(image);
                     }
                     else
                     {
@@ -95,13 +103,28 @@ namespace CatsTaskProject.ViewModels
                     {
                         CatImage image = await imageManager.GetImageById(breeds[i].MainImageId);
                         await imageManager.LoadImage(image.Url);
-                        breeds[i].AddImage(image);
+                        breeds[i].SetMainImage(image);
                     }
                     else
                     {
-                        breeds[i].AddImage(fullPath);
+                        breeds[i].SetMainImage(fullPath);
                     }
                 }
+            }
+        }
+
+        private async void LoadBreedImages(ICollection<CatImage> images)
+        {
+            ImageManager imageManager = new();
+            foreach (CatImage image in images)
+            {
+                string fullPath = string.Empty;
+                bool result = imageManager.ImageAlreadyLoadedById(image.Id, out fullPath);
+                if (!result)
+                {
+                    await imageManager.LoadImage(image.Url);
+                }
+                image.LocalImagePath = imageManager.GetImagePath(image.Url);
             }
         }
 

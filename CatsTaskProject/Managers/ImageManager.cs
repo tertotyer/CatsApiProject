@@ -47,7 +47,7 @@ namespace CatsTaskProject.Managers
             byte[] bytes = await res.Content.ReadAsByteArrayAsync();
 
             using Image image = Image.FromStream(new MemoryStream(bytes));
-            image.Save(imagePath); 
+            image.Save(imagePath);
         }
 
         public bool ImageAlreadyLoadedById(string imageId, out string fullPath)
@@ -63,7 +63,7 @@ namespace CatsTaskProject.Managers
             }
             else
             {
-                fullPath= files[0].FullName;
+                fullPath = files[0].FullName;
             }
 
             return true;

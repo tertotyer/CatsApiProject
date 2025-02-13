@@ -27,6 +27,7 @@ namespace CatsTaskProject.Models
 
         public string WikipediaUrl { get; set; }
 
+        public bool IsFavorite { get; set; }
         
         public string MainImageId { get; set; }
 
@@ -37,20 +38,22 @@ namespace CatsTaskProject.Models
             set => this.RaiseAndSetIfChanged(ref _mainImage, value);
         }
 
+        private ObservableCollection<CatImage> _images;
+        public ObservableCollection<CatImage> Images
+        {
+            get => _images;
+            set => this.RaiseAndSetIfChanged(ref _images, value);
+        }
 
-        public ObservableCollection<string> ImagesIds { get; set; }
 
-        public bool IsFavorite { get; set; }
-
-
-        public void AddImage(CatImage image)
+        public void SetMainImage(CatImage image)
         {
             MainImage = image;
             MainImageId = image.Id;
             MainImage.LocalImagePath = new ImageManager().GetImagePath(MainImage.Url);
         }
 
-        public void AddImage(string imagePath)
+        public void SetMainImage(string imagePath)
         {
             MainImage = new CatImage()
             {

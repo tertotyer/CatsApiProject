@@ -16,7 +16,6 @@ namespace CatsTaskProject.Managers
         
         private CatAPIManager()
         {
-            _httpClient.DefaultRequestHeaders.Add("x-api-key", "DEMO_API_KEY");
         }
 
         public async Task<string> GetBreeds(int quantity, int page)
@@ -46,7 +45,7 @@ namespace CatsTaskProject.Managers
 
         public async Task<string> GetBreedImages(string breedId, int quantity)
         {
-            string url = $"https://api.thecatapi.com/v1/images/search?breed_ids={breedId}&limit={quantity}";
+            string url = $"https://api.thecatapi.com/v1/images/search?breed_id={breedId}&limit={quantity}&has_breeds=false";
             return await _httpClient.GetStringAsync(url);
         }
     }

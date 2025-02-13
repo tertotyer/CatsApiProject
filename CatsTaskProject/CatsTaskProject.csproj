@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\leftArrow.png" />
     <None Remove="Resources\loupe.png" />
     <None Remove="Resources\paw.ico" />
   </ItemGroup>
@@ -24,7 +25,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\loupe.png" />
+    <Resource Include="Resources\LeftArrow.png" />
+    <Resource Include="Resources\Loupe.png" />
     <Resource Include="Resources\paw.ico" />
   </ItemGroup>
 

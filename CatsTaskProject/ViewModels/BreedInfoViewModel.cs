@@ -11,13 +11,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Threading;
 
 namespace CatsTaskProject.ViewModels
 {
     public class BreedInfoViewModel : ViewModelBase
     {
-        private const int BreedLoadImagesCount = 5;
+        private const int BreedLoadImagesCount = 8;
+        private const int ChangeImageTimerIntervalSeconds = 5;
 
+        private DispatcherTimer _changeImageTimer;
         private Breed _currentBreed;
         private int _currentImageIndex;
 
@@ -48,6 +51,9 @@ namespace CatsTaskProject.ViewModels
                 {
                     _currentImageIndex = ++_currentImageIndex < _currentBreed.Images.Count ? _currentImageIndex : 0;
                     CurrentImageLocalPath = _currentBreed.Images[_currentImageIndex].LocalImagePath;
+
+                    _changeImageTimer.Stop();
+                    _changeImageTimer.Start();
                 }
             });
 
@@ -57,8 +63,22 @@ namespace CatsTaskProject.ViewModels
                 {
                     _currentImageIndex = --_currentImageIndex < 0 ? _currentBreed.Images.Count - 1 : _currentImageIndex;
                     CurrentImageLocalPath = _currentBreed.Images[_currentImageIndex].LocalImagePath;
+
+                    _changeImageTimer.Stop();
+                    _changeImageTimer.Start();
                 }
             });
+
+            _changeImageTimer = new();
+            _changeImageTimer.Interval = new TimeSpan(0, 0, ChangeImageTimerIntervalSeconds);
+            _changeImageTimer.Tick += changeTimer_Tick;
+            _changeImageTimer.Start();
+        }
+
+        private void changeTimer_Tick(object sender, EventArgs e)
+        {
+            _currentImageIndex = ++_currentImageIndex < _currentBreed.Images.Count ? _currentImageIndex : 0;
+            CurrentImageLocalPath = _currentBreed.Images[_currentImageIndex].LocalImagePath;
         }
 
         private void BreedInfoViewModel_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)

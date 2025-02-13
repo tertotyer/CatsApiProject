@@ -23,6 +23,12 @@ namespace CatsTaskProject.Managers
 
         public async Task<string> GetBreeds(int quantity, int page)
         {
+            string url = $"http://api.thecatapi.com/v1/breeds";
+            return await _httpClient.GetStringAsync(url);
+        }
+
+        public async Task<string> GetQuantityBreeds(int quantity, int page)
+        {
             string url = $"http://api.thecatapi.com/v1/breeds?limit={quantity}&page={page}";
             return await _httpClient.GetStringAsync(url);
         }

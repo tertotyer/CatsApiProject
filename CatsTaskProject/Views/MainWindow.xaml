@@ -12,6 +12,7 @@
         mc:Ignorable="d"
         x:Name="MainWindowName"
         MinHeight="600" MinWidth="400"
+        MaxHeight="800" MaxWidth="600"
         Title="Breeds" Height="600" Width="400">
 
     <Window.Resources>

@@ -59,11 +59,11 @@
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" x:Name="descriptionTextBlock" FontSize="15" Text="Empty description" TextWrapping="Wrap"/>
             <StackPanel Grid.Row="1" Orientation="Horizontal">
-                <TextBlock Text="Origin: " Margin="0 5 0 0"/>
+                <TextBlock Text="Origin: " FontWeight="DemiBold" Margin="0 5 0 0"/>
                 <TextBlock x:Name="originTextBlock" Text="empty" Margin="0 5 0 0"/>
             </StackPanel>
             <StackPanel Grid.Row="2" Orientation="Horizontal">
-                <TextBlock Text="Life span: " Margin="0 5 0 0"/>
+                <TextBlock Text="Life span: " FontWeight="DemiBold" Margin="0 5 0 0"/>
                 <TextBlock x:Name="lifeSpanTextBlock" Text="empty" Margin="0 5 0 0"/>
             </StackPanel>
             <Grid Grid.Row="3">
@@ -71,7 +71,7 @@
                     <RowDefinition Height="35*"/>
                     <RowDefinition Height="65*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Health issues"/>
+                <TextBlock Grid.Row="0" Text="Health issues" FontWeight="DemiBold"/>
                 <ListBox Grid.Row="1" x:Name="healthListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          BorderBrush="Transparent" ItemContainerStyle="{DynamicResource StarListBoxItem}">
                     <ListBox.ItemsPanel>
@@ -91,7 +91,7 @@
                     <RowDefinition Height="35*"/>
                     <RowDefinition Height="65*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Intelligence"/>
+                <TextBlock Grid.Row="0" Text="Intelligence" FontWeight="DemiBold"/>
                 <ListBox Grid.Row="1" x:Name="intelligenceListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          BorderBrush="Transparent" ItemContainerStyle="{DynamicResource StarListBoxItem}">
                     <ListBox.ItemsPanel>
@@ -111,7 +111,7 @@
                     <RowDefinition Height="35*"/>
                     <RowDefinition Height="65*"/>
                 </Grid.RowDefinitions>
-                <TextBlock Grid.Row="0" Text="Social needs"/>
+                <TextBlock Grid.Row="0" Text="Social needs" FontWeight="DemiBold"/>
                 <ListBox Grid.Row="1" x:Name="socialNeedsListBox" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          BorderBrush="Transparent" ItemContainerStyle="{DynamicResource StarListBoxItem}">
                     <ListBox.ItemsPanel>

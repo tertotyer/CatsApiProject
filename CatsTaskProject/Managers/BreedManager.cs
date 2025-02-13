@@ -24,7 +24,7 @@ namespace CatsTaskProject.Managers
         public async Task<IList<Breed>> GetBreeds(int quantity, int page)
         {
             CatAPIManager apiManager = CatAPIManager.Instance;
-            string jsonResult = await apiManager.GetBreeds(quantity, page);
+            string jsonResult = await apiManager.GetQuantityBreeds(quantity, page);
 
             return JsonSerializer.Deserialize<IList<Breed>>(jsonResult);
         }

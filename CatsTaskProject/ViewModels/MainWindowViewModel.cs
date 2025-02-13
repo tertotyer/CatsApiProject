@@ -1,6 +1,7 @@
 ﻿using CatsTaskProject.Managers;
 using CatsTaskProject.Models;
 using CatsTaskProject.ViewModels.Commands;
+using CatsTaskProject.Views;
 using DynamicData;
 using ReactiveUI;
 using System.Collections.ObjectModel;
@@ -23,7 +24,11 @@ namespace CatsTaskProject.ViewModels
         {
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
             FilterBreedsByNameApiCommand = new DelegateCommand(async text => await FilterBreedsByNameApi(text));
-
+            OpenBreedInfoWindowCommand = new DelegateCommand(obj =>
+            {
+                BreedInfoWindow breedInfoWindow = new BreedInfoWindow();
+                breedInfoWindow.ShowDialog();
+            });
             Breeds = new ObservableCollection<Breed>();
             FilteredBreeds = new ObservableCollection<Breed>();
 
@@ -39,6 +44,7 @@ namespace CatsTaskProject.ViewModels
 
         public ICommand FilterBreedsByNameCommand { get; }
         public ICommand FilterBreedsByNameApiCommand { get; }
+        public ICommand OpenBreedInfoWindowCommand { get; }
 
         internal void ResetPage()
         {
@@ -145,5 +151,7 @@ namespace CatsTaskProject.ViewModels
                 }
             }
         }
+
+
     }
 }

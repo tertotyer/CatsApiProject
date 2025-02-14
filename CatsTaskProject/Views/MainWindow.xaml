@@ -107,7 +107,7 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Grid.Column="2" Height="20" Width="20"></Button>
+                        <Button Grid.Column="2" Height="20" Width="20" Visibility="Hidden"></Button>
                     </Grid>
 
                 </DataTemplate>

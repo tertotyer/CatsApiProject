@@ -14,6 +14,7 @@ namespace CatsTaskProject.Managers
         public ImageManager()
         {
             _imageDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Images");
+            Directory.CreateDirectory(_imageDirectory);
         }
 
         public string ImageDirectory

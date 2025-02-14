@@ -1,11 +1,7 @@
 <h2>Запуск</h2>
 
 1) Клон репозитория : https://github.com/tertotyer/CatsTaskProject/new/master?filename=README.md <br />
-2) Создание папки "Images" в директории с исполняющим файлом
-```
-../CatsTaskProject/bin/Debug/net8.0-windows/
-```
-3) Запись "The Cat API" пользовательского api ключа в <b>user-secrets</b> : <br/>
+2) Запись "The Cat API" пользовательского api ключа в <b>user-secrets</b> : <br/>
 Команды:
 ```
 dotnet user-secrets init

@@ -21,7 +21,7 @@ namespace CatsTaskProject.Managers
             _httpClient.DefaultRequestHeaders.Add("x-api-key", apiKey);
         }
 
-        public async Task<string> GetBreeds(int quantity, int page)
+        public async Task<string> GetBreeds()
         {
             string url = $"http://api.thecatapi.com/v1/breeds";
             Thread.Sleep(500);

@@ -36,6 +36,7 @@ namespace CatsTaskProject.UserControls
         public string Text
         {
             get => inputTextBox.Text;
+            set => inputTextBox.Text = value;
         }
 
         private void inputTextBox_TextChanged(object sender, TextChangedEventArgs e)

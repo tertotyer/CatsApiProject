@@ -45,6 +45,11 @@ namespace CatsTaskProject.Managers
             return startBreeds.Union(containsBreeds).DistinctBy(x => x.Id).ToList();
         }
 
+        public static IList<Breed> FilterBreedCollectionByOrigins(IList<Breed> breeds, IList<string> countries)
+        {
+            return breeds.Where(breed => countries.Any(country => country == breed.Origin)).ToList(); ;
+        }
+
         public static IList<Breed> GetAllNewBreeds(IList<Breed> collection, IList<Breed> newCollection)
         {
             var distinctCollection = collection.Union(newCollection).DistinctBy(x => x.Id).ToList();

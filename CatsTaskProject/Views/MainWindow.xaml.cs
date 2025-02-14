@@ -2,6 +2,7 @@
 using CatsTaskProject.UserControls;
 using System.Windows;
 using System.Windows.Controls;
+using CatsTaskProject.Models;
 
 namespace CatsTaskProject.Views
 {
@@ -47,6 +48,26 @@ namespace CatsTaskProject.Views
 
                 _previousExtentHeight = e.ExtentHeight;
             }
+        }
+
+        private void CheckBox_CheckChanged(object sender, RoutedEventArgs e)
+        {
+            searchTextBox.IsEnabled = false;
+            searchTextBox.Text = string.Empty;
+
+            List<string> selectedCountries = new();
+            for (int i = 0; i < breedCountriesComboBox.Items.Count; i++)
+            {
+                ComboItem item = breedCountriesComboBox.Items[i] as ComboItem;
+                if (item.Ischecked)
+                    selectedCountries.Add(item.Value);
+            }
+
+            if (selectedCountries.Count < 1)
+                searchTextBox.IsEnabled = true;
+
+            MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
+            viewModel.FilterBreedsByOriginCommand.Execute(selectedCountries);
         }
     }
 }

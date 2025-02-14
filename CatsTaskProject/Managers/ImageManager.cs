@@ -14,7 +14,8 @@ namespace CatsTaskProject.Managers
         public ImageManager()
         {
             _imageDirectory = Path.Combine(Path.GetDirectoryName(Assembly.GetEntryAssembly().Location), "Images");
-            Directory.CreateDirectory(_imageDirectory);
+
+            CreateBaseImageFiles();
         }
 
         public string ImageDirectory
@@ -42,8 +43,7 @@ namespace CatsTaskProject.Managers
         {
             string imagePath = GetImagePath(imageUrl);
 
-            HttpClient client = new();
-            var res = await client.GetAsync(imageUrl);
+            var res = await new HttpClient().GetAsync(imageUrl);
 
             byte[] bytes = await res.Content.ReadAsByteArrayAsync();
 
@@ -67,6 +67,15 @@ namespace CatsTaskProject.Managers
         internal string GetImagePath(string imageUrl)
         {
             return Path.Combine(_imageDirectory, Path.GetFileName(imageUrl));
+        }
+
+        private void CreateBaseImageFiles()
+        {
+            Directory.CreateDirectory(_imageDirectory);
+            string noneCatImageFullPath = Path.Combine(Directory.GetParent(Assembly.GetEntryAssembly().FullName).Parent.Parent.Parent.FullName,
+                "Resources/NoneCat.jpeg");
+            if (!File.Exists(noneCatImageFullPath))
+                File.Copy(noneCatImageFullPath, Path.Combine(_imageDirectory, "NoneCat.jpeg"));
         }
     }
 }

@@ -107,9 +107,12 @@ namespace CatsTaskProject.ViewModels
                     }
                     else
                     {
-                        breeds.Remove(breeds[i]);
-                        i--;
-                        continue;
+                        CatImage noneCatImage = new CatImage()
+                        {
+                            Id = "NoneCat",
+                            Url = "NoneCat.jpeg",
+                        };
+                        breeds[i].SetMainImage(noneCatImage);
                     }
                 }
                 else

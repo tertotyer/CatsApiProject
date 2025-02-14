@@ -43,11 +43,21 @@ namespace CatsTaskProject.ViewModels
 
                     LoadBreedImages(_currentBreed.Images);
                 }
+                else
+                {
+                    CatImage noneCatImage = new CatImage()
+                    {
+                        Id = "NoneCat",
+                        Url = "NoneCat.jpeg",
+                        LocalImagePath = new ImageManager().GetImagePath("NoneCat.jpeg")
+                    };
+                    _currentBreed.Images.Add(noneCatImage);
+                }
             });
 
             NextImageCommand = new DelegateCommand(_ =>
             {
-                if (_currentBreed.Images is not null)
+                if (_currentBreed.Images is not null && _currentBreed.Images.Count > 1)
                 {
                     _currentImageIndex = ++_currentImageIndex < _currentBreed.Images.Count ? _currentImageIndex : 0;
                     CurrentImageLocalPath = _currentBreed.Images[_currentImageIndex].LocalImagePath;
@@ -59,7 +69,7 @@ namespace CatsTaskProject.ViewModels
 
             PreviousImageCommand = new DelegateCommand(_ =>
             {
-                if (_currentBreed.Images is not null)
+                if (_currentBreed.Images is not null && _currentBreed.Images.Count > 1)
                 {
                     _currentImageIndex = --_currentImageIndex < 0 ? _currentBreed.Images.Count - 1 : _currentImageIndex;
                     CurrentImageLocalPath = _currentBreed.Images[_currentImageIndex].LocalImagePath;

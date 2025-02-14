@@ -25,6 +25,7 @@ namespace CatsTaskProject.ViewModels
 
         public MainWindowViewModel()
         {
+            ExtendBreedCollectionCommand = new DelegateCommand(async _ => await GetCatBreeds());
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
             FilterBreedsByNameApiCommand = new DelegateCommand(async text => await FilterBreedsByNameApi(text));
             OpenBreedInfoWindowCommand = new DelegateCommand(obj =>
@@ -35,8 +36,6 @@ namespace CatsTaskProject.ViewModels
             });
             Breeds = new ObservableCollection<Breed>();
             FilteredBreeds = new ObservableCollection<Breed>();
-
-            GetCatBreeds();
         }
 
         public ObservableCollection<Breed> Breeds { get; set; }
@@ -46,6 +45,7 @@ namespace CatsTaskProject.ViewModels
             set => this.RaiseAndSetIfChanged(ref _filteredBreeds, value);
         }
 
+        public ICommand ExtendBreedCollectionCommand { get; }
         public ICommand FilterBreedsByNameCommand { get; }
         public ICommand FilterBreedsByNameApiCommand { get; }
         public ICommand OpenBreedInfoWindowCommand { get; }
@@ -55,7 +55,7 @@ namespace CatsTaskProject.ViewModels
             _page = 0;
         }
 
-        private async void GetCatBreeds()
+        private async Task GetCatBreeds()
         {
             BreedManager breedManager = new();
             IList<Breed> loadedBreeds = await breedManager.GetBreeds(BreedsLoadCountPerPage, _page++);

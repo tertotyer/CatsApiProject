@@ -22,7 +22,7 @@
             <b:InvokeCommandAction CommandParameter="{Binding}" Command="{Binding LoadBreedImagesAsyncCommand}"/>
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    
+
     <Grid Margin="10 0 10 0">
 
         <Grid.ColumnDefinitions>

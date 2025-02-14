@@ -8,6 +8,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CatsTaskProject"
         mc:Ignorable="d"
         x:Name="MainWindowName"
@@ -15,11 +16,23 @@
         MaxHeight="800" MaxWidth="600"
         Title="Breeds" Height="600" Width="400">
 
+    <b:Interaction.Triggers>
+        <b:EventTrigger EventName="Loaded">
+            <b:InvokeCommandAction CommandParameter="{Binding}" Command="{Binding ExtendBreedCollectionCommand}"/>
+        </b:EventTrigger>
+    </b:Interaction.Triggers>
+    
     <Window.Resources>
+        <Style TargetType="ListBox">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsLoading}" Value="True">
+                    <Setter Property="ListView.Cursor" Value="Wait"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
         <Style TargetType="ListBoxItem">
             <Setter Property="Margin" Value="0 0 0 5"/>
         </Style>
-
     </Window.Resources>
 
     <Window.DataContext>
@@ -47,10 +60,15 @@
         </Grid>
 
         <ListBox Margin="10, 0, 10, 15" HorizontalContentAlignment="Center" Grid.Row="1"
+                 x:Name="breedsListBox"
                  ItemsSource="{Binding FilteredBreeds}" 
                  ItemContainerStyle="{DynamicResource NoDottedListBoxItem}"
                  BorderBrush="Transparent"
-                 ScrollViewer.VerticalScrollBarVisibility="Hidden">
+                 ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                 ScrollViewer.ScrollChanged="breedsListBox_ScrollChanged"
+                 VirtualizingPanel.IsVirtualizing="True"
+                 VirtualizingStackPanel.CacheLength="1"
+                 VirtualizingStackPanel.CacheLengthUnit="Page">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
 

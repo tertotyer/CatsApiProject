@@ -10,6 +10,9 @@ namespace CatsTaskProject.Views
     /// </summary>
     public partial class MainWindow : WindowBase
     {
+        private const int PageCountBeforeFetchElements = 2;
+        private double _previousExtentHeight;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -29,6 +32,20 @@ namespace CatsTaskProject.Views
                 SearchTextBox textBox = sender as SearchTextBox;
                 MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
                 viewModel.FilterBreedsByNameApiCommand.Execute(textBox.Text);
+            }
+        }
+
+        private void breedsListBox_ScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            ListBox listBox = sender as ListBox;
+            if (e.VerticalChange > 0 && _previousExtentHeight != e.ExtentHeight &&
+                string.IsNullOrEmpty(searchTextBox.Text) &&
+                e.ExtentHeight - e.VerticalOffset - e.ViewportHeight * PageCountBeforeFetchElements < 0) 
+            {
+                MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
+                viewModel.ExtendBreedCollectionCommand.Execute(null);
+
+                _previousExtentHeight = e.ExtentHeight;
             }
         }
     }

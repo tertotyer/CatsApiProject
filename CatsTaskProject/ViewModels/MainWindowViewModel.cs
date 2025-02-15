@@ -8,6 +8,7 @@ using ReactiveUI;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
+using System.Runtime.Caching;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -59,7 +60,7 @@ namespace CatsTaskProject.ViewModels
             set => this.RaiseAndSetIfChanged(ref _filteredBreeds, value);
         }
 
-        public ObservableCollection<ComboItem> BreedCountries
+        public ObservableCollection<ComboItem> BreedsOrigins
         {
             get => _breedCountries;
             set => this.RaiseAndSetIfChanged(ref _breedCountries, value);
@@ -124,6 +125,10 @@ namespace CatsTaskProject.ViewModels
                     }
                 }
                 breeds[i].MainImage.LocalImagePath = imageManager.GetImagePath(breeds[i].MainImage.Url);
+                MemoryCache.Default.Add(breeds[i].Id, breeds[i], new System.Runtime.Caching.CacheItemPolicy()
+                {
+                    AbsoluteExpiration = DateTime.Now.Add(TimeSpan.FromMinutes(10)),
+                });
             }
         }
 
@@ -143,9 +148,9 @@ namespace CatsTaskProject.ViewModels
 
         private async Task FilterBreedsByName(object text)
         {
-            if (text != null)
+            if (!string.IsNullOrEmpty(text.ToString()))
             {
-                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(Breeds, text.ToString()));
+                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterCacheBreedsByName(text.ToString()));
                 if (FilteredBreeds.Count < 1)
                 {
                     await FilterBreedsByNameApi(text);
@@ -154,7 +159,7 @@ namespace CatsTaskProject.ViewModels
             }
             else
             {
-                FilteredBreeds = new ObservableCollection<Breed>(Breeds);
+                FilteredBreeds = new ObservableCollection<Breed>(Breeds.OrderBy(x => x.Name));
             }
             _isLastFilteredBreedsEmpty = false;
         }
@@ -186,7 +191,7 @@ namespace CatsTaskProject.ViewModels
 
         private void Breeds_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            BreedCountries = new ObservableCollection<ComboItem>(Breeds.Select(x => new ComboItem(x.Origin)).DistinctBy(x => x.Value).OrderBy(x => x.Value));
+            BreedsOrigins = new ObservableCollection<ComboItem>(Breeds.Select(x => new ComboItem(x.Origin)).DistinctBy(x => x.Value).OrderBy(x => x.Value));
         }
     }
 }

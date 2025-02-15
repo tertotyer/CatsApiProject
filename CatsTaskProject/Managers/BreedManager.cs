@@ -4,6 +4,7 @@ using System.Text.Json;
 using System.Linq;
 using DynamicData;
 using System.Drawing;
+using System.Runtime.Caching;
 
 namespace CatsTaskProject.Managers
 {
@@ -39,8 +40,17 @@ namespace CatsTaskProject.Managers
 
         public static IList<Breed> FilterBreedCollectionByName(IList<Breed> breeds, string text)
         {
-            var startBreeds = breeds.Where(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Name).ToList();
-            var containsBreeds = breeds.Where(x => x.Name.Contains(text, StringComparison.OrdinalIgnoreCase));
+            var containsBreeds = breeds.Where(x => x.Name.Contains(text, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Name);
+            var startBreeds = containsBreeds.Where(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            return startBreeds.Union(containsBreeds).DistinctBy(x => x.Id).ToList();
+        }
+
+        public static IList<Breed> FilterCacheBreedsByName(string text)
+        {
+            var containsBreeds = MemoryCache.Default.Where(x => ((Breed)x.Value)?.Name.Contains(text, StringComparison.OrdinalIgnoreCase) ?? false).
+                Select(x => (Breed)x.Value).OrderBy(x => x.Name);
+            var startBreeds = containsBreeds.Where(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase)).ToList();
 
             return startBreeds.Union(containsBreeds).DistinctBy(x => x.Id).ToList();
         }

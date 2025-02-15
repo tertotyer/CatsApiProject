@@ -58,7 +58,7 @@
                       VerticalAlignment="Center" HorizontalAlignment="Stretch" 
                       FontSize="14" FontWeight="Light" Foreground="DarkGray" MinWidth="160"
                       Margin="15 21 15 15"
-                      ItemsSource="{Binding BreedCountries}"
+                      ItemsSource="{Binding BreedsOrigins}"
                       IsReadOnly="True" IsEditable="True" Focusable="False" Text="Select countries"
                       BorderThickness="0 0 0 2" BorderBrush="Gray">
                 <ComboBox.ItemTemplate>

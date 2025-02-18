@@ -11,13 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\LeftArrow.png" />
-    <None Remove="Resources\LeftArrowImage.png" />
-    <None Remove="Resources\Loupe.png" />
-    <None Remove="Resources\NoneCat.jpeg" />
+    <None Remove="Resources\Images\FavoriteStar.png" />
+    <None Remove="Resources\Images\HalfFavoriteStar.png" />
+    <None Remove="Resources\Images\NotFavoriteStar.png" />
+    <None Remove="Resources\Images\LeftArrow.png" />
+    <None Remove="Resources\Images\LeftArrowImage.png" />
+    <None Remove="Resources\Images\Loupe.png" />
+    <None Remove="Resources\Images\NoneCat.jpeg" />
     <None Remove="Resources\paw.ico" />
-    <None Remove="Resources\RightArrowImage.png" />
-    <None Remove="Resources\Star.png" />
+    <None Remove="Resources\Images\RightArrowImage.png" />
+    <None Remove="Resources\Images\Star.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,13 +36,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\LeftArrow.png" />
-    <Resource Include="Resources\LeftArrowImage.png" />
-    <Resource Include="Resources\Loupe.png" />
-    <Resource Include="Resources\NoneCat.jpeg" />
+    <Resource Include="Resources\Images\FavoriteStar.png" />
+    <Resource Include="Resources\Images\HalfFavoriteStar.png" />
+    <Resource Include="Resources\Images\NotFavoriteStar.png" />
+    <Resource Include="Resources\Images\LeftArrow.png" />
+    <Resource Include="Resources\Images\LeftArrowImage.png" />
+    <Resource Include="Resources\Images\Loupe.png" />
+    <Resource Include="Resources\Images\NoneCat.jpeg" />
     <Resource Include="Resources\paw.ico" />
-    <Resource Include="Resources\RightArrowImage.png" />
-    <Resource Include="Resources\Star.png" />
+    <Resource Include="Resources\Images\RightArrowImage.png" />
+    <Resource Include="Resources\Images\Star.png" />
   </ItemGroup>
 
 </Project>

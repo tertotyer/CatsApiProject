@@ -2,14 +2,8 @@
 using CatsTaskProject.Models;
 using CatsTaskProject.ViewModels.Commands;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
 
@@ -35,7 +29,7 @@ namespace CatsTaskProject.ViewModels
 
             LoadBreedImagesAsyncCommand = new DelegateCommand(async _ =>
             {
-                _currentBreed.Images = new ObservableCollection<CatImage>(await new ImageManager().GetBreedImages(_currentBreed.Id, BreedLoadImagesCount));
+                _currentBreed.Images = new(await new ImageManager().GetBreedImages(_currentBreed.Id, BreedLoadImagesCount));
                 if (_currentBreed.Images.Count > 0)
                 {
                     foreach (var image in _currentBreed.Images)

@@ -5,6 +5,7 @@ using CatsTaskProject.ViewModels.Commands;
 using CatsTaskProject.Views;
 using DynamicData;
 using ReactiveUI;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Reflection;
@@ -12,13 +13,13 @@ using System.Runtime.Caching;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace CatsTaskProject.ViewModels
 {
     public class MainWindowViewModel : ViewModelBase
     {
         private const int BreedsLoadCountPerPage = 20;
+        private const string FavoritesFileName = "favorites.json";
 
         private int _page = 0;
         private bool _isLastFilteredBreedsEmpty = false;
@@ -34,6 +35,7 @@ namespace CatsTaskProject.ViewModels
 
             FilteredBreeds = new ObservableCollection<Breed>();
 
+            LoadFirstBreedCollectionCommand = new DelegateCommand(async _ => await LoadFirstBreedCollection());
             ExtendBreedCollectionCommand = new DelegateCommand(async _ => await GetCatBreeds());
             FilterBreedsByOriginCommand = new DelegateCommand(obj => FilterBreedsByOrigin(obj));
             FilterBreedsByNameCommand = new DelegateCommand(async text => await FilterBreedsByName(text));
@@ -44,9 +46,21 @@ namespace CatsTaskProject.ViewModels
                 BreedInfoWindow breedInfoWindow = new(breed);
                 breedInfoWindow.ShowDialog();
             });
+
+            FavoriteCommand = new DelegateCommand(obj =>
+            {
+                Breed breed = obj as Breed;
+                if (breed is not null)
+                {
+                    breed.IsFavorite = !breed.IsFavorite;
+
+                    File.Create(FavoritesFileName).Close();
+                    File.AppendAllText(FavoritesFileName, JsonSerializer.Serialize(Breeds.Where(x => x.IsFavorite)));
+
+                    FilteredBreeds = new(Breeds.OrderBy(x => x.IsFavorite ? 0 : 1).ThenBy(x => x.Name));
+                }
+            });
         }
-
-
 
         public ObservableCollection<Breed> Breeds
         {
@@ -66,16 +80,60 @@ namespace CatsTaskProject.ViewModels
             set => this.RaiseAndSetIfChanged(ref _breedCountries, value);
         }
 
+        public ICommand LoadFirstBreedCollectionCommand { get; }
         public ICommand ExtendBreedCollectionCommand { get; }
         public ICommand FilterBreedsByOriginCommand { get; }
         public ICommand FilterBreedsByNameCommand { get; }
         public ICommand FilterBreedsByNameApiCommand { get; }
         public ICommand OpenBreedInfoWindowCommand { get; }
+        public ICommand FavoriteCommand { get; }
 
 
         internal void ResetPage()
         {
             _page = 0;
+        }
+
+        private async Task LoadFirstBreedCollection()
+        {
+            await GetCatBreeds();
+            AddFavoriteBreeds();
+        }
+
+        private void AddFavoriteBreeds()
+        {
+            IList<Breed> favoriteBreeds = new List<Breed>();
+            if (File.Exists(FavoritesFileName))
+            {
+                string fileText = File.ReadAllText(FavoritesFileName);
+                if (!string.IsNullOrEmpty(fileText))
+                {
+                    favoriteBreeds = JsonSerializer.Deserialize<IList<Breed>>(fileText);
+
+                    if (favoriteBreeds.Count > 0)
+                    {
+                        foreach (Breed breed in favoriteBreeds)
+                        {
+                            Breed item = Breeds.FirstOrDefault(x => x.Id == breed.Id);
+                            if (item is null)
+                            {
+                                breed.MainImage.LocalImagePath = new ImageManager().GetImagePath(breed.MainImage.Url);
+                                breed.IsFavorite = true;
+                                Breeds.Add(breed);
+
+                                MemoryCache.Default.Add(breed.Id, breed, new CacheItemPolicy()
+                                {
+                                    AbsoluteExpiration = DateTime.Now.Add(TimeSpan.FromMinutes(10)),
+                                });
+                            }
+                            else
+                                item.IsFavorite = true;
+                        }
+
+                        FilteredBreeds = new(Breeds.OrderBy(x => x.IsFavorite ? 0 : 1).ThenBy(x => x.Name));
+                    }
+                }
+            }
         }
 
         private async Task GetCatBreeds()
@@ -88,7 +146,7 @@ namespace CatsTaskProject.ViewModels
                 Breeds.AddRange(newBreeds);
                 LoadBreedsImages(newBreeds);
 
-                FilteredBreeds = Breeds;
+                FilteredBreeds = new(Breeds.OrderBy(x => x.IsFavorite ? 0 : 1).ThenBy(x => x.Name));
             }
         }
 
@@ -132,17 +190,16 @@ namespace CatsTaskProject.ViewModels
             }
         }
 
-
         private void FilterBreedsByOrigin(object selectedCountries)
         {
             IList<string> countries = (IList<string>)selectedCountries;
             if (countries is not null && countries.Count > 0)
             {
-                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByOrigins(Breeds, countries));
+                FilteredBreeds = new(BreedManager.FilterBreedsByOrigins(Breeds, countries));
             }
             else
             {
-                FilteredBreeds = new ObservableCollection<Breed>(Breeds);
+                FilteredBreeds = new(Breeds.OrderBy(x => x.IsFavorite ? 0 : 1).ThenBy(x => x.Name));
             }
         }
 
@@ -150,7 +207,7 @@ namespace CatsTaskProject.ViewModels
         {
             if (!string.IsNullOrEmpty(text.ToString()))
             {
-                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterCacheBreedsByName(text.ToString()));
+                FilteredBreeds = new(BreedManager.FilterBreedsByName(Breeds, text.ToString()));
                 if (FilteredBreeds.Count < 1)
                 {
                     await FilterBreedsByNameApi(text);
@@ -159,7 +216,7 @@ namespace CatsTaskProject.ViewModels
             }
             else
             {
-                FilteredBreeds = new ObservableCollection<Breed>(Breeds.OrderBy(x => x.Name));
+                FilteredBreeds = new(Breeds.OrderBy(x => x.IsFavorite ? 0 : 1).ThenBy(x => x.Name));
             }
             _isLastFilteredBreedsEmpty = false;
         }
@@ -180,7 +237,7 @@ namespace CatsTaskProject.ViewModels
                 {
                     breed.MainImage = Breeds.FirstOrDefault(x => x.Id == breed.Id)?.MainImage;
                 }
-                FilteredBreeds = new ObservableCollection<Breed>(BreedManager.FilterBreedCollectionByName(foundBreeds, text.ToString()));
+                FilteredBreeds = new(BreedManager.FilterBreedsByName(foundBreeds, text.ToString()));
 
                 if (foundBreeds.Count > 0)
                     _isLastFilteredBreedsEmpty = false;
@@ -191,7 +248,7 @@ namespace CatsTaskProject.ViewModels
 
         private void Breeds_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
-            BreedsOrigins = new ObservableCollection<ComboItem>(Breeds.Select(x => new ComboItem(x.Origin)).DistinctBy(x => x.Value).OrderBy(x => x.Value));
+            BreedsOrigins = new(Breeds.Select(x => new ComboItem(x.Origin)).DistinctBy(x => x.Value).OrderBy(x => x.Value));
         }
     }
 }

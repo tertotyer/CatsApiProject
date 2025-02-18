@@ -13,7 +13,7 @@ namespace CatsTaskProject.Managers.Interfaces
         public Task<IList<Breed>> GetBreeds(int quantity, int page);
         public Task<IList<Breed>> SearchBreedsByName(string text);
 
-        public static abstract IList<Breed> FilterBreedCollectionByName(IList<Breed> breeds, string text);
+        public static abstract IList<Breed> FilterBreedsByName(IList<Breed> breeds, string text);
         public static abstract IList<Breed> GetAllNewBreeds(IList<Breed> collection, IList<Breed> newCollection);
     }
 }

@@ -6,6 +6,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
+using System.Drawing.Drawing2D;
 
 namespace CatsTaskProject.Converters
 {
@@ -29,9 +30,16 @@ namespace CatsTaskProject.Converters
             return image;
         }
 
-        public override void Write(Utf8JsonWriter writer, CatImage value, JsonSerializerOptions options)
+        public override void Write(Utf8JsonWriter writer, CatImage image, JsonSerializerOptions options)
         {
-            JsonSerializer.Serialize(writer, value, options);
+            writer.WriteStartObject();
+
+            writer.WriteString("id", image.Id);
+            writer.WriteNumber("width", image.Width);
+            writer.WriteNumber("height", image.Height);
+            writer.WriteString("url", image.Url);
+
+            writer.WriteEndObject();
         }
     }
 }

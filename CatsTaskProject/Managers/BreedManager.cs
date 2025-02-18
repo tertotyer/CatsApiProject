@@ -38,7 +38,7 @@ namespace CatsTaskProject.Managers
             return JsonSerializer.Deserialize<IList<Breed>>(jsonResult);
         }
 
-        public static IList<Breed> FilterBreedCollectionByName(IList<Breed> breeds, string text)
+        public static IList<Breed> FilterBreedsByName(IList<Breed> breeds, string text)
         {
             var containsBreeds = breeds.Where(x => x.Name.Contains(text, StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Name);
             var startBreeds = containsBreeds.Where(x => x.Name.StartsWith(text, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -55,7 +55,7 @@ namespace CatsTaskProject.Managers
             return startBreeds.Union(containsBreeds).DistinctBy(x => x.Id).ToList();
         }
 
-        public static IList<Breed> FilterBreedCollectionByOrigins(IList<Breed> breeds, IList<string> countries)
+        public static IList<Breed> FilterBreedsByOrigins(IList<Breed> breeds, IList<string> countries)
         {
             return breeds.Where(breed => countries.Any(country => country == breed.Origin)).ToList(); ;
         }

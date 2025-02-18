@@ -1,6 +1,6 @@
 <h2>Запуск</h2>
 
-1) Клонирование репозитория : https://github.com/tertotyer/CatsTaskProject/new/master?filename=README.md <br />
+1) Клонирование репозитория : https://github.com/tertotyer/CatsApiProject.git <br />
 2) Запись пользовательского api ключа (<a href="https://thecatapi.com/signup">get API key</a>) в <b>user-secrets</b> <br/>
 <b>Команды:</b>
 ```
@@ -15,7 +15,8 @@ dotnet user-secrets set "x-api-key" "YOUR_API_KEY"
 
 <h2>Описание</h2>
 <b>Стек технологий:</b> .NET 8, WPF, ReactiveUI.
-<img width="400" align="right" src="https://github.com/user-attachments/assets/3ed3dc7b-2ba8-48bb-bae6-f8ffbb1db01e" />
+
+<img width="400" align="right" src="https://github.com/user-attachments/assets/b3715ad0-16a9-4075-a411-f7976f397cff" />
 
 <h4>Работа с API</h4>
 Осуществляется с помощью <b>HttpClient</b>.<br/> Все запросы к API выполняются асинхронно.
@@ -26,6 +27,11 @@ dotnet user-secrets set "x-api-key" "YOUR_API_KEY"
 - При пролистывании списка пород вниз за 2 итерации пролистывания до последнего элемента отправляется асинхронный запрос к API на выборку 20 следующих пород;
 
 - Все полученные записи сохраняются в кэш;
+
+<h4>Избранное</h4>
+
+- Породу можно добавить в список избранного;
+- Избранные породы сохраняются между сеансами локально на диске;
 
 <h4>Работа с изображениями</h4>
 

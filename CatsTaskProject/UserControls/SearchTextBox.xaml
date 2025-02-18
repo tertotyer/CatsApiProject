@@ -114,7 +114,7 @@
                        Panel.ZIndex="-1"/>
             <Button Style="{DynamicResource SearchButtonStyle}" Grid.Column="1" x:Name="searchButton" HorizontalAlignment="Stretch"
                     Click="searchButton_Click">
-                <Image Source="/CatsTaskProject;component/Resources/Loupe.png" Stretch="Uniform"/>
+                <Image Source="/CatsTaskProject;component/Resources/Images/Loupe.png" Stretch="Uniform"/>
             </Button>
         </Grid>
     </Border>

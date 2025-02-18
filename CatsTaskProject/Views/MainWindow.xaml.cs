@@ -64,10 +64,30 @@ namespace CatsTaskProject.Views
             }
 
             if (selectedCountries.Count < 1)
+            {
                 searchTextBox.IsEnabled = true;
+                breedCountriesComboBox.Text = "Select countries";
+            }
+            else
+                breedCountriesComboBox.Text = selectedCountries.Count.ToString();
 
             MainWindowViewModel viewModel = DataContext as MainWindowViewModel;
             viewModel.FilterBreedsByOriginCommand.Execute(selectedCountries);
+        }
+
+        private void breedCountriesComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            breedCountriesComboBox.SelectedIndex = -1;
+        }
+
+        private void favoriteButton_Click(object sender, RoutedEventArgs e)
+        {
+            searchTextBox.Text = string.Empty;
+
+            foreach (ComboItem item in breedCountriesComboBox.Items)
+            {
+                item.Ischecked = false;
+            }
         }
     }
 }

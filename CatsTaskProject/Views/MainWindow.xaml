@@ -12,25 +12,27 @@
         xmlns:local="clr-namespace:CatsTaskProject"
         mc:Ignorable="d"
         x:Name="MainWindowName"
-        MinHeight="600" MinWidth="400"
+        MinHeight="610" MinWidth="400"
         MaxHeight="800" MaxWidth="600"
         Title="Breeds" Height="600" Width="400">
 
     <b:Interaction.Triggers>
         <b:EventTrigger EventName="Loaded">
-            <b:InvokeCommandAction CommandParameter="{Binding}" Command="{Binding ExtendBreedCollectionCommand}"/>
+            <b:InvokeCommandAction CommandParameter="{Binding}" Command="{Binding LoadFirstBreedCollectionCommand}"/>
         </b:EventTrigger>
     </b:Interaction.Triggers>
-    
+
     <Window.Resources>
-        <Style TargetType="ListBox">
+        <converters:BooleanToVisibilityConverter x:Key="booleanToVisibilityConverter"/>
+        <Style TargetType="{x:Type ListBox}">
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsLoading}" Value="True">
                     <Setter Property="ListView.Cursor" Value="Wait"/>
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-        <Style TargetType="ListBoxItem">
+        <Style TargetType="{x:Type ListBoxItem}">
             <Setter Property="Margin" Value="0 0 0 5"/>
         </Style>
     </Window.Resources>
@@ -51,7 +53,7 @@
                 <ColumnDefinition Width="50*"/>
             </Grid.ColumnDefinitions>
             <userControls:SearchTextBox x:Name="searchTextBox" Grid.Column="0" Placeholder="Search breed" 
-                                        Margin="27"
+                                        Margin="27" Text=""
                                         KeyUp="searchTextBox_KeyUp" SearchCommand="{Binding FilterBreedsByNameApiCommand}" />
             <ComboBox Grid.Column="1" 
                       x:Name="breedCountriesComboBox"
@@ -60,16 +62,12 @@
                       Margin="15 21 15 15"
                       ItemsSource="{Binding BreedsOrigins}"
                       IsReadOnly="True" IsEditable="True" Focusable="False" Text="Select countries"
+                      SelectionChanged="breedCountriesComboBox_SelectionChanged"
                       BorderThickness="0 0 0 2" BorderBrush="Gray">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
-                        <StackPanel Orientation="Horizontal">
-                            <CheckBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
-                                      Content="{Binding Value}" 
-                                      IsChecked="{Binding Ischecked}"
-                                      Unchecked="CheckBox_CheckChanged"
-                                      Checked="CheckBox_CheckChanged"/>
-                        </StackPanel>
+                        <CheckBox Content="{Binding Value}" IsChecked="{Binding Ischecked}"
+                                  Unchecked="CheckBox_CheckChanged" Checked="CheckBox_CheckChanged"/>
                     </DataTemplate>
                 </ComboBox.ItemTemplate>
             </ComboBox>
@@ -107,7 +105,40 @@
                             </StackPanel>
                         </Button>
 
-                        <Button Grid.Column="2" Height="20" Width="20" Visibility="Hidden"></Button>
+                        <Button Grid.Column="2" Height="25" Width="25" Style="{StaticResource TransparentButton}"
+                                Click="favoriteButton_Click"  
+                                Command="{Binding DataContext.FavoriteCommand, ElementName=MainWindowName}" CommandParameter="{Binding}" >
+                            <Image>
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="/Resources/Images/NotFavoriteStar.png"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source" Value="/Resources/Images/FavoriteStar.png"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
+
+                        <Button Grid.Column="2" x:Name="favoriteButton" Height="25" Width="25" 
+                                Click="favoriteButton_Click" Command="{Binding DataContext.FavoriteCommand, ElementName=MainWindowName}"
+                                CommandParameter="{Binding}"  Style="{StaticResource TransparentButton}" 
+                                Visibility="{Binding Path=IsFavorite, Converter={StaticResource booleanToVisibilityConverter}}">
+                            <Image>
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" Value="/Resources/Images/FavoriteStar.png"/>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter Property="Source" Value="/Resources/Images/HalfFavoriteStar.png"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                        </Button>
                     </Grid>
 
                 </DataTemplate>

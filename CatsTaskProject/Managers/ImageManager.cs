@@ -73,7 +73,7 @@ namespace CatsTaskProject.Managers
         {
             Directory.CreateDirectory(_imageDirectory);
             string noneCatImageFullPath = Path.Combine(Directory.GetParent(Assembly.GetEntryAssembly().FullName).Parent.Parent.Parent.FullName,
-                "Resources\\NoneCat.jpeg");
+                "Resources\\Images\\NoneCat.jpeg");
             if (!File.Exists(Path.Combine(_imageDirectory, "NoneCat.jpeg")))
                 File.Copy(noneCatImageFullPath, Path.Combine(_imageDirectory, "NoneCat.jpeg"));
         }

@@ -41,7 +41,7 @@
                 <ColumnDefinition Width="400"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Grid.Column="0" Style="{DynamicResource TransparentButton}" Margin="0 5 10 5" Click="backButton_Click">
-                <Image Source="/Resources/LeftArrow.png"/>
+                <Image Source="/Resources/Images/LeftArrow.png"/>
             </Button>
             <TextBlock Grid.Column="1" x:Name="nameTextBlock"
                    HorizontalAlignment="Left" VerticalAlignment="Center"
@@ -81,7 +81,7 @@
                     </ListBox.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="/Resources/Star.png" Height="25" Width="25"/>
+                            <Image Source="/Resources/Images/Star.png" Height="25" Width="25"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ListBox>
@@ -101,7 +101,7 @@
                     </ListBox.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="/Resources/Star.png" Height="25" Width="25"/>
+                            <Image Source="/Resources/Images/Star.png" Height="25" Width="25"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ListBox>
@@ -121,7 +121,7 @@
                     </ListBox.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Image Source="/Resources/Star.png" Height="25" Width="25"/>
+                            <Image Source="/Resources/Images/Star.png" Height="25" Width="25"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ListBox>
@@ -136,11 +136,11 @@
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0" Style="{DynamicResource TransparentButton}" Margin="0 5 10 5" 
                     Command="{Binding PreviousImageCommand}">
-                <Image Source="/Resources/LeftArrowImage.png"/>
+                <Image Source="/Resources/Images/LeftArrowImage.png"/>
             </Button>
             <Image Grid.Column="1" Source="{Binding CurrentImageLocalPath}"/>
             <Button Grid.Column="2" Style="{DynamicResource TransparentButton}" Margin="0 5 10 5" Command="{Binding NextImageCommand}">
-                <Image Source="/Resources/RightArrowImage.png"/>
+                <Image Source="/Resources/Images/RightArrowImage.png"/>
             </Button>
         </Grid>
 
